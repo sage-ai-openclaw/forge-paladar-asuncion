@@ -3,10 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paladar Asunción - Buscador de Restaurantes</title>
-  <meta name="description" content="Encontrá los mejores platos en restaurantes de Asunción y Gran Asunción">
+  <title>Paladar Asunción - Buscador de Platos</title>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div id="root"></div>
+  <div class="container">
+    <header>
+      <h1>🍽️ Paladar Asunción</h1>
+      <p>Encontrá el mejor precio para tu plato favorito</p>
+    </header>
+
+    <main>
+      <div class="search-section">
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="¿Qué querés comer? Ej: milanesa, sushi, pizza..."
+            autocomplete="off"
+          >
+          <button id="searchBtn">Buscar</button>
+        </div>
+        
+        <div class="filters">
+          <select id="zoneFilter">
+            <option value="">Todas las zonas</option>
+          </select>
+          <select id="cuisineFilter">
+            <option value="">Todos los tipos</option>
+          </select>
+          <input type="number" id="minPrice" placeholder="Precio mín" min="0">
+          <input type="number" id="maxPrice" placeholder="Precio máx" min="0">
+        </div>
+      </div>
+
+      <div id="resultsInfo" class="results-info hidden"></div>
+      
+      <div id="results" class="results">
+        <div class="empty-state">
+          <p>🔍 Escribí el nombre de un plato para empezar a buscar</p>
+        </div>
+      </div>
+    </main>
+
+    <nav class="admin-nav">
+      <a href="/admin.html">Panel de Administración →</a>
+    </nav>
+  </div>
+
+  <script src="/app.js"></script>
 </body>
 </html>
