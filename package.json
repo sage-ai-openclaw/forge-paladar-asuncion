@@ -4,9 +4,10 @@
   "description": "Buscador inteligente de platos en restaurantes de Asuncion",
   "main": "server.js",
   "scripts": {
-    "build": "webpack --mode=production",
-    "build:dev": "webpack --mode=development",
-    "start": "node server.js",
+    "build": "webpack --mode=production && npm run build:server",
+    "build:dev": "webpack --mode=development && npm run build:server",
+    "build:server": "tsc",
+    "start": "node dist/server.js",
     "dev": "npm run build:dev && npm start"
   },
   "dependencies": {
