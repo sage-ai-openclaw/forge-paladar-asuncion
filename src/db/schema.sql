@@ -30,3 +30,7 @@ CREATE INDEX IF NOT EXISTS idx_restaurants_cuisine_type ON restaurants(cuisine_t
 CREATE INDEX IF NOT EXISTS idx_menu_items_restaurant_id ON menu_items(restaurant_id);
 CREATE INDEX IF NOT EXISTS idx_menu_items_category ON menu_items(category);
 CREATE INDEX IF NOT EXISTS idx_menu_items_price_pyg ON menu_items(price_pyg);
+
+-- Indexes for search functionality
+CREATE INDEX IF NOT EXISTS idx_menu_items_name ON menu_items(name);
+CREATE INDEX IF NOT EXISTS idx_restaurants_name ON restaurants(name);

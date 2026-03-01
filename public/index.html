@@ -3,63 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paladar Asunción - Buscador de Platos</title>
+  <title>Paladar Asunción - Buscador de Restaurantes</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <header>
     <h1>🍽️ Paladar Asunción</h1>
-    <p>Buscador inteligente de platos en restaurantes de Asunción y Gran Asunción</p>
+    <p>Descubre los mejores platos de Asunción y Gran Asunción</p>
   </header>
-
+  
+  <nav>
+    <a href="/" class="active">Buscar</a>
+    <a href="/admin.html">Admin</a>
+  </nav>
+  
   <main>
-    <section class="search-section">
+    <section id="search-section">
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Buscar plato...">
+        <input type="text" id="search-input" placeholder="Buscar plato o restaurante...">
+        <button id="search-btn">Buscar</button>
       </div>
       
       <div class="filters">
-        <div class="filter-group">
-          <label for="cuisineFilter">Tipo de cocina</label>
-          <select id="cuisineFilter">
-            <option value="all">Todas</option>
-          </select>
-        </div>
+        <select id="cuisine-filter">
+          <option value="">Todas las cocinas</option>
+        </select>
         
-        <div class="filter-group">
-          <label for="zoneFilter">Zona</label>
-          <select id="zoneFilter">
-            <option value="all">Todas</option>
-          </select>
-        </div>
+        <select id="zone-filter">
+          <option value="">Todas las zonas</option>
+        </select>
         
-        <div class="filter-group price-filter">
-          <label for="priceRange">Rango de precio</label>
-          <div class="price-slider-container">
-            <input type="range" id="minPriceSlider" min="0" max="100000" step="1000" value="0">
-            <input type="range" id="maxPriceSlider" min="0" max="100000" step="1000" value="100000">
-          </div>
-          <div class="price-values">
-            <span id="minPriceDisplay">Gs. 0</span>
-            <span id="maxPriceDisplay">Gs. 100.000</span>
-          </div>
-        </div>
+        <select id="price-filter">
+          <option value="">Todos los precios</option>
+          <option value="0-30000">Hasta ₲30.000</option>
+          <option value="30000-60000">₲30.000 - ₲60.000</option>
+          <option value="60000-100000">₲60.000 - ₲100.000</option>
+          <option value="100000-999999">Más de ₲100.000</option>
+        </select>
       </div>
-      
-      <button id="searchBtn" class="btn-primary">Buscar</button>
     </section>
-
-    <section class="results-section">
-      <div id="resultsCount"></div>
-      <div id="resultsList" class="results-list"></div>
+    
+    <section id="results-section">
+      <div id="restaurants-list"></div>
     </section>
   </main>
-
-  <nav class="main-nav">
-    <a href="/" class="active">Buscador</a>
-    <a href="/admin.html">Panel Admin</a>
-  </nav>
-
+  
   <script src="/app.js"></script>
 </body>
 </html>

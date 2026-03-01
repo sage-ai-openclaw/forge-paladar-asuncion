@@ -11,45 +11,68 @@
     <h1>🍽️ Paladar Asunción</h1>
     <p>Panel de Administración</p>
   </header>
-
+  
+  <nav>
+    <a href="/">Buscar</a>
+    <a href="/admin.html" class="active">Admin</a>
+  </nav>
+  
   <main>
     <section class="admin-section">
       <h2>Agregar Restaurante</h2>
-      <form id="restaurantForm">
-        <input type="text" id="restName" placeholder="Nombre del restaurante" required>
-        <input type="text" id="restCuisine" placeholder="Tipo de cocina (ej: paraguaya, italiana)" required>
-        <input type="text" id="restZone" placeholder="Zona (ej: centro, villa morra)" required>
-        <input type="text" id="restAddress" placeholder="Dirección">
-        <input type="text" id="restPhone" placeholder="Teléfono">
-        <button type="submit" class="btn-primary">Agregar Restaurante</button>
+      <form id="restaurant-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Tipo de cocina</label>
+            <input type="text" name="cuisine_type" placeholder="Ej: Paraguaya, Italiana, Asiática">
+          </div>
+          <div class="form-group">
+            <label>Zona</label>
+            <input type="text" name="zone" placeholder="Ej: Villa Morra, Centro, San Lorenzo">
+          </div>
+          <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" name="address">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" name="phone" placeholder="Ej: +595 21 123 456">
+          </div>
+          <div class="form-group">
+            <label>Horario</label>
+            <input type="text" name="hours" placeholder="Ej: Lun-Dom: 10:00 - 22:00">
+          </div>
+          <div class="form-group">
+            <label>Latitud</label>
+            <input type="number" step="any" name="lat">
+          </div>
+          <div class="form-group">
+            <label>Longitud</label>
+            <input type="number" step="any" name="lng">
+          </div>
+          <div class="form-group">
+            <label>Precio mínimo</label>
+            <input type="number" name="price_range_min" placeholder="Ej: 25000">
+          </div>
+          <div class="form-group">
+            <label>Precio máximo</label>
+            <input type="number" name="price_range_max" placeholder="Ej: 80000">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Guardar Restaurante</button>
       </form>
     </section>
-
+    
     <section class="admin-section">
-      <h2>Agregar Plato al Menú</h2>
-      <form id="menuItemForm">
-        <select id="selectRestaurant" required>
-          <option value="">Seleccionar restaurante</option>
-        </select>
-        <input type="text" id="dishName" placeholder="Nombre del plato" required>
-        <textarea id="dishDesc" placeholder="Descripción"></textarea>
-        <input type="number" id="dishPrice" placeholder="Precio (Gs.)" required>
-        <input type="text" id="dishCategory" placeholder="Categoría (ej: entrada, principal, postre)">
-        <button type="submit" class="btn-primary">Agregar Plato</button>
-      </form>
-    </section>
-
-    <section class="admin-section">
-      <h2>Restaurantes Registrados</h2>
-      <div id="restaurantsList"></div>
+      <h2>Restaurantes</h2>
+      <div id="restaurants-table"></div>
     </section>
   </main>
-
-  <nav class="main-nav">
-    <a href="/">Buscador</a>
-    <a href="/admin.html" class="active">Panel Admin</a>
-  </nav>
-
+  
   <script src="/admin.js"></script>
 </body>
 </html>

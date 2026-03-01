@@ -1,13 +1,13 @@
 {
   "name": "paladar-asuncion",
   "version": "1.0.0",
-  "description": "Buscador inteligente de platos en restaurantes de Asuncion",
+  "description": "Buscador inteligente de platos en restaurantes de Asuncion y Gran Asuncion",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "better-sqlite3": "^9.4.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "better-sqlite3": "^9.4.3"
   }
 }
