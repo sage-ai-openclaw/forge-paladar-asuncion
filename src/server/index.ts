@@ -36,7 +36,7 @@ app.get('/api/search', async (req, res) => {
       mi.id as menu_item_id,
       mi.name as dish_name,
       mi.description,
-      mi.price,
+      mi.price_pyg as price,
       mi.category,
       r.id as restaurant_id,
       r.name as restaurant_name,
@@ -44,7 +44,7 @@ app.get('/api/search', async (req, res) => {
       r.address,
       r.zone,
       r.phone,
-      r.website,
+      r.hours,
       CASE 
         WHEN LOWER(mi.name) = LOWER(?) THEN 5
         WHEN LOWER(mi.name) LIKE LOWER(?) THEN 4
@@ -60,7 +60,7 @@ app.get('/api/search', async (req, res) => {
       LOWER(mi.description) LIKE LOWER(?) OR
       LOWER(r.name) LIKE LOWER(?) OR
       LOWER(r.cuisine_type) LIKE LOWER(?)
-    ORDER BY relevance_score DESC, mi.price ASC
+    ORDER BY relevance_score DESC, mi.price_pyg ASC
     LIMIT 50
   `, [q, `${q}%`, searchPattern, searchPattern, searchPattern, searchPattern, searchPattern, searchPattern, searchPattern]);
 

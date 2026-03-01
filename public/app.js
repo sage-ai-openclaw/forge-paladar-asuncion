@@ -1,178 +1,171 @@
-// Paladar Asunción - Search App
+// Paladar Asunción - Main App
 
 const searchInput = document.getElementById('searchInput');
-const searchBtn = document.getElementById('searchBtn');
-const resultsDiv = document.getElementById('results');
-const resultsInfo = document.getElementById('resultsInfo');
-const zoneFilter = document.getElementById('zoneFilter');
 const cuisineFilter = document.getElementById('cuisineFilter');
-const minPrice = document.getElementById('minPrice');
-const maxPrice = document.getElementById('maxPrice');
+const zoneFilter = document.getElementById('zoneFilter');
+const minPriceSlider = document.getElementById('minPriceSlider');
+const maxPriceSlider = document.getElementById('maxPriceSlider');
+const minPriceDisplay = document.getElementById('minPriceDisplay');
+const maxPriceDisplay = document.getElementById('maxPriceDisplay');
+const searchBtn = document.getElementById('searchBtn');
+const resultsList = document.getElementById('resultsList');
+const resultsCount = document.getElementById('resultsCount');
 
-let searchTimeout;
+let priceRange = { minPrice: 0, maxPrice: 100000 };
 
-// Initialize
-document.addEventListener('DOMContentLoaded', () => {
-  loadFilters();
-  searchInput.focus();
-});
+// Format price in Guaraníes
+function formatPrice(price) {
+  return 'Gs. ' + price.toLocaleString('es-PY');
+}
 
-// Event listeners
-searchInput.addEventListener('input', (e) => {
-  clearTimeout(searchTimeout);
-  const query = e.target.value.trim();
-  
-  if (query.length >= 2) {
-    searchTimeout = setTimeout(() => performSearch(), 300);
-  } else if (query.length === 0) {
-    showEmptyState();
-  }
-});
-
-searchInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    clearTimeout(searchTimeout);
-    performSearch();
-  }
-});
-
-searchBtn.addEventListener('click', performSearch);
-
-[zoneFilter, cuisineFilter, minPrice, maxPrice].forEach(el => {
-  el.addEventListener('change', () => {
-    if (searchInput.value.trim().length >= 2) {
-      performSearch();
-    }
-  });
-});
-
+// Load filter options
 async function loadFilters() {
   try {
-    const [zonesRes, cuisinesRes] = await Promise.all([
-      fetch('/api/zones'),
-      fetch('/api/cuisines')
-    ]);
-    
-    const zones = await zonesRes.json();
-    const cuisines = await cuisinesRes.json();
-    
-    zones.forEach(zone => {
-      const option = document.createElement('option');
-      option.value = zone;
-      option.textContent = zone;
-      zoneFilter.appendChild(option);
-    });
-    
+    // Load cuisines
+    const cuisines = await fetch('/api/cuisines').then(r => r.json());
     cuisines.forEach(cuisine => {
       const option = document.createElement('option');
       option.value = cuisine;
-      option.textContent = cuisine;
+      option.textContent = cuisine.charAt(0).toUpperCase() + cuisine.slice(1);
       cuisineFilter.appendChild(option);
     });
+
+    // Load zones
+    const zones = await fetch('/api/zones').then(r => r.json());
+    zones.forEach(zone => {
+      const option = document.createElement('option');
+      option.value = zone;
+      option.textContent = zone.charAt(0).toUpperCase() + zone.slice(1);
+      zoneFilter.appendChild(option);
+    });
+
+    // Load price range
+    priceRange = await fetch('/api/price-range').then(r => r.json());
+    minPriceSlider.min = priceRange.minPrice;
+    minPriceSlider.max = priceRange.maxPrice;
+    minPriceSlider.value = priceRange.minPrice;
+    maxPriceSlider.min = priceRange.minPrice;
+    maxPriceSlider.max = priceRange.maxPrice;
+    maxPriceSlider.value = priceRange.maxPrice;
+    
+    updatePriceDisplay();
   } catch (err) {
-    console.error('Failed to load filters:', err);
+    console.error('Error loading filters:', err);
   }
 }
 
-async function performSearch() {
-  const query = searchInput.value.trim();
-  
-  if (query.length < 2) {
-    resultsDiv.innerHTML = '<div class="empty-state"><p>Escribí al menos 2 caracteres para buscar</p></div>';
-    resultsInfo.classList.add('hidden');
-    return;
+// Update price display
+function updatePriceDisplay() {
+  minPriceDisplay.textContent = formatPrice(parseInt(minPriceSlider.value));
+  maxPriceDisplay.textContent = formatPrice(parseInt(maxPriceSlider.value));
+}
+
+// Handle price slider changes
+minPriceSlider.addEventListener('input', () => {
+  const minVal = parseInt(minPriceSlider.value);
+  const maxVal = parseInt(maxPriceSlider.value);
+  if (minVal > maxVal) {
+    minPriceSlider.value = maxVal;
   }
-  
-  resultsDiv.innerHTML = '<div class="loading">Buscando...</div>';
-  resultsInfo.classList.add('hidden');
-  
+  updatePriceDisplay();
+});
+
+maxPriceSlider.addEventListener('input', () => {
+  const minVal = parseInt(minPriceSlider.value);
+  const maxVal = parseInt(maxPriceSlider.value);
+  if (maxVal < minVal) {
+    maxPriceSlider.value = minVal;
+  }
+  updatePriceDisplay();
+});
+
+// Search function
+async function search() {
   const params = new URLSearchParams();
-  params.append('q', query);
   
-  if (zoneFilter.value) params.append('zone', zoneFilter.value);
-  if (cuisineFilter.value) params.append('cuisine', cuisineFilter.value);
-  if (minPrice.value) params.append('minPrice', minPrice.value);
-  if (maxPrice.value) params.append('maxPrice', maxPrice.value);
+  const query = searchInput.value.trim();
+  if (query) params.append('q', query);
   
+  const cuisine = cuisineFilter.value;
+  if (cuisine !== 'all') params.append('cuisine', cuisine);
+  
+  const zone = zoneFilter.value;
+  if (zone !== 'all') params.append('zone', zone);
+  
+  const minPrice = minPriceSlider.value;
+  const maxPrice = maxPriceSlider.value;
+  
+  // Only add price params if they're different from the full range
+  if (parseInt(minPrice) > priceRange.minPrice) {
+    params.append('minPrice', minPrice);
+  }
+  if (parseInt(maxPrice) < priceRange.maxPrice) {
+    params.append('maxPrice', maxPrice);
+  }
+
   try {
-    const response = await fetch(`/api/search?${params}`);
-    const data = await response.json();
-    
-    displayResults(data, query);
+    const results = await fetch(`/api/search?${params}`).then(r => r.json());
+    displayResults(results);
   } catch (err) {
     console.error('Search error:', err);
-    resultsDiv.innerHTML = '<div class="no-results"><p>❌ Error al buscar. Intentá de nuevo.</p></div>';
+    resultsList.innerHTML = '<div class="no-results">Error al buscar. Intenta de nuevo.</div>';
   }
 }
 
-function displayResults(data, query) {
-  const { results, total } = data;
-  
-  // Update results info
-  if (total > 0) {
-    resultsInfo.innerHTML = `Encontramos <strong>${total}</strong> resultado${total !== 1 ? 's' : ''} para "<strong>${escapeHtml(query)}</strong>"`;
-    resultsInfo.classList.remove('hidden');
-  } else {
-    resultsInfo.classList.add('hidden');
-  }
+// Display results
+function displayResults(results) {
+  resultsCount.textContent = `${results.length} resultado${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`;
   
   if (results.length === 0) {
-    resultsDiv.innerHTML = `
-      <div class="no-results">
-        <p>😕 No encontramos platos que coincidan con "${escapeHtml(query)}"</p>
-        <p style="margin-top: 10px; font-size: 0.95rem;">Probá con otro término o verificá la ortografía</p>
-      </div>
-    `;
+    resultsList.innerHTML = '<div class="no-results">No se encontraron platos con esos filtros.</div>';
     return;
   }
-  
-  resultsDiv.innerHTML = results.map(group => `
-    <div class="restaurant-card">
-      <div class="restaurant-header">
-        <h3>${escapeHtml(group.restaurant.name)}</h3>
-        <div class="restaurant-meta">
-          ${group.restaurant.cuisine_type ? `<span>🍴 ${escapeHtml(group.restaurant.cuisine_type)}</span>` : ''}
-          ${group.restaurant.zone ? `<span>📍 ${escapeHtml(group.restaurant.zone)}</span>` : ''}
-          ${group.restaurant.address ? `<span>🏠 ${escapeHtml(group.restaurant.address)}</span>` : ''}
-          ${group.restaurant.phone ? `<span>📞 ${escapeHtml(group.restaurant.phone)}</span>` : ''}
-        </div>
+
+  resultsList.innerHTML = results.map(item => `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-title">${escapeHtml(item.dishName)}</div>
+        <div class="result-price">${formatPrice(item.price)}</div>
       </div>
-      <div class="dishes-list">
-        ${group.dishes.map(dish => `
-          <div class="dish-item">
-            <div class="dish-info">
-              <h4>${highlightMatch(escapeHtml(dish.name), query)}</h4>
-              ${dish.description ? `<p>${escapeHtml(dish.description)}</p>` : ''}
-              ${dish.category ? `<span class="dish-category">${escapeHtml(dish.category)}</span>` : ''}
-            </div>
-            <div class="dish-price">Gs. ${formatPrice(dish.price)}</div>
-          </div>
-        `).join('')}
+      <div class="result-meta">
+        <span>${escapeHtml(item.cuisine)}</span>
+        <span>${escapeHtml(item.zone)}</span>
+        ${item.category ? `<span>${escapeHtml(item.category)}</span>` : ''}
+      </div>
+      ${item.description ? `<div class="result-description">${escapeHtml(item.description)}</div>` : ''}
+      <div class="result-restaurant">
+        🏪 ${escapeHtml(item.restaurantName)} • ${escapeHtml(item.address || 'Sin dirección')}
       </div>
     </div>
   `).join('');
 }
 
-function showEmptyState() {
-  resultsDiv.innerHTML = '<div class="empty-state"><p>🔍 Escribí el nombre de un plato para empezar a buscar</p></div>';
-  resultsInfo.classList.add('hidden');
-}
-
+// Escape HTML to prevent XSS
 function escapeHtml(text) {
+  if (!text) return '';
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
-function highlightMatch(text, query) {
-  const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-  return text.replace(regex, '<mark>$1</mark>');
+// Event listeners
+searchBtn.addEventListener('click', search);
+searchInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') search();
+});
+
+// Debounced search on filter changes
+let debounceTimer;
+function debouncedSearch() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(search, 300);
 }
 
-function escapeRegex(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+cuisineFilter.addEventListener('change', debouncedSearch);
+zoneFilter.addEventListener('change', debouncedSearch);
+minPriceSlider.addEventListener('change', debouncedSearch);
+maxPriceSlider.addEventListener('change', debouncedSearch);
 
-function formatPrice(price) {
-  return Math.round(price).toLocaleString('es-PY');
-}
+// Initialize
+loadFilters();
+search();

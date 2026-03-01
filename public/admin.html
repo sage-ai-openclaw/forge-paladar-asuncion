@@ -5,331 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Paladar Asunción</title>
   <link rel="stylesheet" href="/styles.css">
-  <style>
-    .admin-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    .admin-section {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
-    }
-    
-    .admin-section h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-      color: #555;
-    }
-    
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    
-    .form-group textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-    
-    .btn-primary {
-      background: #667eea;
-      color: white;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    
-    .btn-primary:hover {
-      background: #5a67d8;
-    }
-    
-    .success-msg {
-      background: #d4edda;
-      color: #155724;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-    }
-    
-    .error-msg {
-      background: #f8d7da;
-      color: #721c24;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 15px;
-    }
-    
-    .restaurant-list {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    
-    .restaurant-list-item {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-      cursor: pointer;
-    }
-    
-    .restaurant-list-item:hover {
-      background: #f8f9fa;
-    }
-    
-    .restaurant-list-item.selected {
-      background: #e3f2fd;
-    }
-    
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .tab {
-      padding: 10px 20px;
-      border: none;
-      background: #e0e0e0;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    
-    .tab.active {
-      background: #667eea;
-      color: white;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
-    
-    .back-link {
-      display: inline-block;
-      margin-bottom: 20px;
-      color: #667eea;
-      text-decoration: none;
-    }
-  </style>
 </head>
 <body>
-  <div class="admin-container">
-    <a href="/" class="back-link">← Volver al buscador</a>
-    
-    <header style="margin-bottom: 30px;">
-      <h1>Panel de Administración</h1>
-    </header>
-    
-    <div class="tabs">
-      <button class="tab active" onclick="showTab('restaurant')">Agregar Restaurante</button>
-      <button class="tab" onclick="showTab('menu')">Agregar Plato</button>
-    </div>
-    
-    <div id="restaurantTab" class="tab-content active">
-      <div class="admin-section">
-        <h2>Agregar Restaurante</h2>
-        <div id="restaurantMsg"></div>
-        <form id="restaurantForm">
-          <div class="form-group">
-            <label>Nombre *</label>
-            <input type="text" name="name" required>
-          </div>
-          <div class="form-group">
-            <label>Dirección</label>
-            <input type="text" name="address">
-          </div>
-          <div class="form-group">
-            <label>Zona</label>
-            <input type="text" name="zone" placeholder="Ej: Villa Morra, Centro, etc.">
-          </div>
-          <div class="form-group">
-            <label>Teléfono</label>
-            <input type="text" name="phone">
-          </div>
-          <div class="form-group">
-            <label>Tipo de Cocina</label>
-            <input type="text" name="cuisine_type" placeholder="Ej: Paraguaya, Italiana, Japonesa">
-          </div>
-          <button type="submit" class="btn-primary">Guardar Restaurante</button>
-        </form>
-      </div>
-    </div>
-    
-    <div id="menuTab" class="tab-content">
-      <div class="admin-section">
-        <h2>Agregar Plato al Menú</h2>
-        <div id="menuMsg"></div>
-        
-        <div class="form-group">
-          <label>Seleccionar Restaurante *</label>
-          <div id="restaurantList" class="restaurant-list" style="border: 1px solid #ddd; border-radius: 6px;">
-            <p style="padding: 12px; color: #666;">Cargando restaurantes...</p>
-          </div>
-          <input type="hidden" id="selectedRestaurantId">
-        </div>
-        
-        <form id="menuForm">
-          <div class="form-group">
-            <label>Nombre del Plato *</label>
-            <input type="text" name="name" required>
-          </div>
-          <div class="form-group">
-            <label>Descripción</label>
-            <textarea name="description" placeholder="Ingredientes, preparación, etc."></textarea>
-          </div>
-          <div class="form-group">
-            <label>Precio (Gs.) *</label>
-            <input type="number" name="price" required min="0">
-          </div>
-          <div class="form-group">
-            <label>Categoría</label>
-            <input type="text" name="category" placeholder="Ej: Entrada, Plato Principal, Postre">
-          </div>
-          <button type="submit" class="btn-primary">Guardar Plato</button>
-        </form>
-      </div>
-    </div>
-  </div>
-  
-  <script>
-    let restaurants = [];
-    
-    function showTab(tab) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      
-      event.target.classList.add('active');
-      document.getElementById(tab + 'Tab').classList.add('active');
-      
-      if (tab === 'menu') {
-        loadRestaurants();
-      }
-    }
-    
-    async function loadRestaurants() {
-      try {
-        const res = await fetch('/api/admin/restaurants');
-        restaurants = await res.json();
-        
-        const list = document.getElementById('restaurantList');
-        if (restaurants.length === 0) {
-          list.innerHTML = '<p style="padding: 12px; color: #666;">No hay restaurantes. Agregá uno primero.</p>';
-          return;
-        }
-        
-        list.innerHTML = restaurants.map(r => `
-          <div class="restaurant-list-item" data-id="${r.id}" onclick="selectRestaurant(${r.id})">
-            <strong>${escapeHtml(r.name)}</strong>
-            ${r.zone ? `<br><small>${escapeHtml(r.zone)}</small>` : ''}
-          </div>
-        `).join('');
-      } catch (err) {
-        document.getElementById('restaurantList').innerHTML = '<p style="padding: 12px; color: #721c24;">Error al cargar restaurantes</p>';
-      }
-    }
-    
-    function selectRestaurant(id) {
-      document.getElementById('selectedRestaurantId').value = id;
-      document.querySelectorAll('.restaurant-list-item').forEach(el => {
-        el.classList.toggle('selected', parseInt(el.dataset.id) === id);
-      });
-    }
-    
-    document.getElementById('restaurantForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const data = Object.fromEntries(new FormData(form));
-      
-      try {
-        const res = await fetch('/api/admin/restaurants', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        
-        const result = await res.json();
-        
-        if (result.error) {
-          showMsg('restaurantMsg', result.error, 'error');
-        } else {
-          showMsg('restaurantMsg', '✅ Restaurante guardado correctamente', 'success');
-          form.reset();
-        }
-      } catch (err) {
-        showMsg('restaurantMsg', '❌ Error al guardar', 'error');
-      }
-    });
-    
-    document.getElementById('menuForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const restaurantId = document.getElementById('selectedRestaurantId').value;
-      
-      if (!restaurantId) {
-        showMsg('menuMsg', '⚠️ Seleccioná un restaurante primero', 'error');
-        return;
-      }
-      
-      const form = e.target;
-      const data = Object.fromEntries(new FormData(form));
-      data.restaurant_id = parseInt(restaurantId);
-      data.price = parseFloat(data.price);
-      
-      try {
-        const res = await fetch('/api/admin/menu-items', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        
-        const result = await res.json();
-        
-        if (result.error) {
-          showMsg('menuMsg', result.error, 'error');
-        } else {
-          showMsg('menuMsg', '✅ Plato guardado correctamente', 'success');
-          form.reset();
-          document.getElementById('selectedRestaurantId').value = '';
-          document.querySelectorAll('.restaurant-list-item').forEach(el => el.classList.remove('selected'));
-        }
-      } catch (err) {
-        showMsg('menuMsg', '❌ Error al guardar', 'error');
-      }
-    });
-    
-    function showMsg(containerId, msg, type) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = `<div class="${type}-msg">${msg}</div>`;
-      setTimeout(() => container.innerHTML = '', 5000);
-    }
-    
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-  </script>
+  <header>
+    <h1>🍽️ Paladar Asunción</h1>
+    <p>Panel de Administración</p>
+  </header>
+
+  <main>
+    <section class="admin-section">
+      <h2>Agregar Restaurante</h2>
+      <form id="restaurantForm">
+        <input type="text" id="restName" placeholder="Nombre del restaurante" required>
+        <input type="text" id="restCuisine" placeholder="Tipo de cocina (ej: paraguaya, italiana)" required>
+        <input type="text" id="restZone" placeholder="Zona (ej: centro, villa morra)" required>
+        <input type="text" id="restAddress" placeholder="Dirección">
+        <input type="text" id="restPhone" placeholder="Teléfono">
+        <button type="submit" class="btn-primary">Agregar Restaurante</button>
+      </form>
+    </section>
+
+    <section class="admin-section">
+      <h2>Agregar Plato al Menú</h2>
+      <form id="menuItemForm">
+        <select id="selectRestaurant" required>
+          <option value="">Seleccionar restaurante</option>
+        </select>
+        <input type="text" id="dishName" placeholder="Nombre del plato" required>
+        <textarea id="dishDesc" placeholder="Descripción"></textarea>
+        <input type="number" id="dishPrice" placeholder="Precio (Gs.)" required>
+        <input type="text" id="dishCategory" placeholder="Categoría (ej: entrada, principal, postre)">
+        <button type="submit" class="btn-primary">Agregar Plato</button>
+      </form>
+    </section>
+
+    <section class="admin-section">
+      <h2>Restaurantes Registrados</h2>
+      <div id="restaurantsList"></div>
+    </section>
+  </main>
+
+  <nav class="main-nav">
+    <a href="/">Buscador</a>
+    <a href="/admin.html" class="active">Panel Admin</a>
+  </nav>
+
+  <script src="/admin.js"></script>
 </body>
 </html>

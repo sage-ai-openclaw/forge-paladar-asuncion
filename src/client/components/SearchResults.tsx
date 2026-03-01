@@ -12,13 +12,14 @@ interface SearchResult {
   address: string;
   zone: string;
   phone: string | null;
-  website: string | null;
+  hours: string | null;
   relevance_score: number;
 }
 
 interface SearchResultsProps {
   results: SearchResult[];
   query: string;
+  onSelectRestaurant?: (restaurantId: number) => void;
 }
 
 const formatPrice = (price: number): string => {
@@ -38,7 +39,7 @@ const highlightMatch = (text: string, query: string): React.ReactNode => {
   );
 };
 
-export const SearchResults: React.FC<SearchResultsProps> = ({ results, query }) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({ results, query, onSelectRestaurant }) => {
   if (results.length === 0) {
     return (
       <div className="no-results">
@@ -61,7 +62,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ results, query }) 
           address: result.address,
           zone: result.zone,
           phone: result.phone,
-          website: result.website
+          hours: result.hours
         },
         items: []
       };
@@ -77,8 +78,13 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ results, query }) 
       </p>
       
       {Object.values(groupedByRestaurant).map(({ restaurant, items }) => (
-        <div key={restaurant.id} className="restaurant-result">
-          <div className="restaurant-header">
+        <div 
+          key={restaurant.id} 
+          className="restaurant-result"
+          onClick={() => onSelectRestaurant?.(restaurant.id)}
+          style={{ cursor: onSelectRestaurant ? 'pointer' : 'default' }}
+        >
+          <div className="restaurant-header" onClick={(e) => e.stopPropagation()}>
             <h3>{highlightMatch(restaurant.name, query)}</h3>
             <span className="cuisine-type">{restaurant.cuisine_type}</span>
           </div>

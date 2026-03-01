@@ -7,49 +7,58 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🍽️ Paladar Asunción</h1>
-      <p>Encontrá el mejor precio para tu plato favorito</p>
-    </header>
+  <header>
+    <h1>🍽️ Paladar Asunción</h1>
+    <p>Buscador inteligente de platos en restaurantes de Asunción y Gran Asunción</p>
+  </header>
 
-    <main>
-      <div class="search-section">
-        <div class="search-box">
-          <input 
-            type="text" 
-            id="searchInput" 
-            placeholder="¿Qué querés comer? Ej: milanesa, sushi, pizza..."
-            autocomplete="off"
-          >
-          <button id="searchBtn">Buscar</button>
+  <main>
+    <section class="search-section">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Buscar plato...">
+      </div>
+      
+      <div class="filters">
+        <div class="filter-group">
+          <label for="cuisineFilter">Tipo de cocina</label>
+          <select id="cuisineFilter">
+            <option value="all">Todas</option>
+          </select>
         </div>
         
-        <div class="filters">
+        <div class="filter-group">
+          <label for="zoneFilter">Zona</label>
           <select id="zoneFilter">
-            <option value="">Todas las zonas</option>
+            <option value="all">Todas</option>
           </select>
-          <select id="cuisineFilter">
-            <option value="">Todos los tipos</option>
-          </select>
-          <input type="number" id="minPrice" placeholder="Precio mín" min="0">
-          <input type="number" id="maxPrice" placeholder="Precio máx" min="0">
+        </div>
+        
+        <div class="filter-group price-filter">
+          <label for="priceRange">Rango de precio</label>
+          <div class="price-slider-container">
+            <input type="range" id="minPriceSlider" min="0" max="100000" step="1000" value="0">
+            <input type="range" id="maxPriceSlider" min="0" max="100000" step="1000" value="100000">
+          </div>
+          <div class="price-values">
+            <span id="minPriceDisplay">Gs. 0</span>
+            <span id="maxPriceDisplay">Gs. 100.000</span>
+          </div>
         </div>
       </div>
-
-      <div id="resultsInfo" class="results-info hidden"></div>
       
-      <div id="results" class="results">
-        <div class="empty-state">
-          <p>🔍 Escribí el nombre de un plato para empezar a buscar</p>
-        </div>
-      </div>
-    </main>
+      <button id="searchBtn" class="btn-primary">Buscar</button>
+    </section>
 
-    <nav class="admin-nav">
-      <a href="/admin.html">Panel de Administración →</a>
-    </nav>
-  </div>
+    <section class="results-section">
+      <div id="resultsCount"></div>
+      <div id="resultsList" class="results-list"></div>
+    </section>
+  </main>
+
+  <nav class="main-nav">
+    <a href="/" class="active">Buscador</a>
+    <a href="/admin.html">Panel Admin</a>
+  </nav>
 
   <script src="/app.js"></script>
 </body>
