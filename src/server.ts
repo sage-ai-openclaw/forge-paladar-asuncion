@@ -1,31 +1,39 @@
 import express from 'express';
-import { getDatabase, closeDatabase } from './db/database';
+import cors from 'cors';
+import path from 'path';
+import { initDb } from './db';
+import restaurantRoutes from './routes/restaurants';
+import menuItemRoutes from './routes/menuItems';
+import importRoutes from './routes/import';
 
-const app = express();
 const PORT = process.env.PORT || 5584;
 
-app.use(express.json());
+async function main() {
+  await initDb();
+  console.log('Database initialized');
 
-app.get('/health', async (req, res) => {
-  try {
-    const db = await getDatabase();
-    await db.get('SELECT 1');
-    res.json({ status: 'ok', database: 'connected' });
-  } catch (error) {
-    res.status(503).json({ status: 'error', database: 'disconnected' });
-  }
-});
+  const app = express();
+  
+  app.use(cors());
+  app.use(express.json());
+  app.use(express.static(path.join(__dirname, '../public')));
 
-process.on('SIGINT', async () => {
-  await closeDatabase();
-  process.exit(0);
-});
+  app.use('/api/restaurants', restaurantRoutes);
+  app.use('/api/menu-items', menuItemRoutes);
+  app.use('/api/import', importRoutes);
 
-process.on('SIGTERM', async () => {
-  await closeDatabase();
-  process.exit(0);
-});
+  app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/admin.html'));
+  });
 
-app.listen(PORT, () => {
-  console.log(`Paladar Asuncion server running on port ${PORT}`);
-});
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok' });
+  });
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log(`Admin panel: http://localhost:${PORT}/admin`);
+  });
+}
+
+main().catch(console.error);
