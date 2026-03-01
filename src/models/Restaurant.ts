@@ -2,7 +2,7 @@ import { getDatabase } from '../db/database';
 import { Restaurant, RestaurantInput } from '../types';
 
 export class RestaurantModel {
-  static async create(input: RestaurantInput): Promise<Restaurant> {
+  static async create(input: RestaurantInput): Promise<Restaurant | undefined> {
     const db = await getDatabase();
     const result = await db.run(
       `INSERT INTO restaurants (name, address, zone, phone, hours, cuisine_type)

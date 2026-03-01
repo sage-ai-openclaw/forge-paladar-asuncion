@@ -4,7 +4,7 @@ export interface Restaurant {
   address: string;
   zone: string;
   phone?: string;
-  website?: string;
+  hours?: string;
   cuisine_type?: string;
   created_at: string;
   updated_at: string;
@@ -26,7 +26,7 @@ export interface RestaurantInput {
   address: string;
   zone: string;
   phone?: string;
-  website?: string;
+  hours?: string;
   cuisine_type?: string;
 }
 
