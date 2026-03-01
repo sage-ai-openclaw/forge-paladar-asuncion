@@ -2,32 +2,37 @@
   "name": "paladar-asuncion",
   "version": "1.0.0",
   "description": "Buscador inteligente de platos en restaurantes de Asuncion y Gran Asuncion",
-  "main": "dist/server.js",
+  "main": "dist/server/index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn src/server.ts",
-    "init-db": "ts-node src/scripts/initDb.ts"
+    "build": "tsc && webpack --mode production",
+    "build:dev": "tsc && webpack --mode development",
+    "start": "node dist/server/index.js",
+    "dev": "concurrently \"tsc -w\" \"webpack serve --mode development\" \"nodemon dist/server/index.js\"",
+    "init-db": "node scripts/init-db.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6",
     "cors": "^2.8.5",
-    "multer": "^1.4.5-lts.1",
-    "csv-parse": "^5.5.0",
+    "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.0"
+    "sqlite": "^4.2.1",
+    "sqlite3": "^5.1.6"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.9.0",
-    "@types/cors": "^2.8.16",
-    "@types/multer": "^1.4.11",
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.19",
+    "@types/node": "^20.8.6",
+    "@types/react": "^18.2.28",
+    "@types/react-dom": "^18.2.13",
+    "concurrently": "^8.2.1",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "nodemon": "^3.0.1",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.0",
     "typescript": "^5.2.2",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0"
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   }
 }
